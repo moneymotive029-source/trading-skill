@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "src/app/api/analyze/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "src/app/api/signals/route.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "PYTHON_ENABLED": "1"
+  },
+  "crons": [
+    {
+      "path": "/api/cron/signals",
+      "schedule": "0 */15 * * * *"
+    }
+  ]
+}
