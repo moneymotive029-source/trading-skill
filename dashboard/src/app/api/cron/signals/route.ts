@@ -23,8 +23,8 @@ export async function GET(request: Request) {
 
   console.log(`[${new Date().toISOString()}] Running scheduled signal update`);
 
-  // Process signal updates in background
-  waitUntil(async () => {
+  // Process signal updates in background using native waitUntil pattern
+  const backgroundWork = (async () => {
     try {
       // List of assets to monitor
       const assets = [
@@ -38,37 +38,44 @@ export async function GET(request: Request) {
 
       // Run analysis for each asset
       const analysisPromises = assets.map(async (asset) => {
-        // Call the Python trading agent
-        const response = await fetch(
-          `${process.env.VERCEL_URL || "localhost:3000"}/api/analyze`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(asset),
+        try {
+          const response = await fetch(
+            `${process.env.VERCEL_URL || "http://localhost:3010"}/api/analyze`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(asset),
+            }
+          );
+
+          if (!response.ok) {
+            console.error(`Failed to analyze ${asset.symbol}: ${response.statusText}`);
+            return null;
           }
-        );
 
-        if (!response.ok) {
-          throw new Error(`Failed to analyze ${asset.symbol}`);
+          return response.json();
+        } catch (err) {
+          console.error(`Error analyzing ${asset.symbol}:`, err);
+          return null;
         }
-
-        return response.json();
       });
 
-      const results = await Promise.all(analysisPromises);
+      const results = (await Promise.all(analysisPromises)).filter(Boolean);
 
-      // Store results (would integrate with database in production)
       console.log(`Updated ${results.length} signals successfully`);
-
-      // Here you would:
-      // 1. Save to database (PostgreSQL via Neon/Supabase)
-      // 2. Check for significant changes
-      // 3. Send alerts if new high-conviction signals
-      // 4. Update cached signal data
     } catch (error) {
       console.error("Cron job failed:", error);
     }
-  });
+  })();
+
+  // Use waitUntil if available, otherwise just let the promise run
+  if (typeof waitUntil === "function" && request.signal) {
+    try {
+      waitUntil(backgroundWork);
+    } catch {
+      // Ignore if waitUntil not available in dev
+    }
+  }
 
   return NextResponse.json({
     status: "queued",

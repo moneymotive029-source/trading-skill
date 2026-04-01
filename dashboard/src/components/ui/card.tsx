@@ -6,7 +6,7 @@ export function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`rounded-xl border ${className}`}>{children}</div>
+    <div className={`relative ${className}`}>{children}</div>
   );
 }
 
@@ -17,7 +17,7 @@ export function CardHeader({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <div className={`p-4 border-b border-slate-800 ${className}`}>{children}</div>;
+  return <div className={`p-5 ${className}`}>{children}</div>;
 }
 
 export function CardTitle({
@@ -37,5 +37,5 @@ export function CardContent({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <div className={`p-4 ${className}`}>{children}</div>;
+  return <div className={`p-5 ${className}`}>{children}</div>;
 }

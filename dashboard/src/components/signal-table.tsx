@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { SignalBadge, ConfidenceBadge } from "./signal-badge";
 import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 
-interface Signal {
+export interface Signal {
   id: string;
   symbol: string;
   assetClass: string;

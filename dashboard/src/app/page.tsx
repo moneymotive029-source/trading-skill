@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { SignalBadge, ConfidenceBadge } from "@/components/signal-badge";
 import { AssetSearch } from "@/components/asset-search";
-import { SignalTable } from "@/components/signal-table";
+import { SignalTable, type Signal } from "@/components/signal-table";
 import { PortfolioOverview } from "@/components/portfolio-overview";
 import { ActivityFeed } from "@/components/activity-feed";
 import { LivePrices } from "@/components/live-prices";
@@ -30,7 +30,7 @@ import {
   Clock,
 } from "lucide-react";
 
-const mockSignals = [
+const mockSignals: Signal[] = [
   { id: "1", symbol: "BTC/USD", assetClass: "Crypto", direction: "LONG", confidence: "High", entryZone: "$94,200 - $95,500", stopLoss: "$91,800", takeProfit: "$102,000", riskReward: "1:3.2", timestamp: "2m ago" },
   { id: "2", symbol: "AAPL", assetClass: "Stock", direction: "SHORT", confidence: "Medium", entryZone: "$228 - $230", stopLoss: "$235", takeProfit: "$215", riskReward: "1:2.1", timestamp: "8m ago" },
   { id: "3", symbol: "EUR/USD", assetClass: "Forex", direction: "LONG", confidence: "High", entryZone: "1.0850 - 1.0870", stopLoss: "1.0820", takeProfit: "1.0950", riskReward: "1:2.7", timestamp: "15m ago" },

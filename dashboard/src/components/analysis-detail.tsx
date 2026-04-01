@@ -78,6 +78,7 @@ const mockAnalysis: AnalysisData = {
     kellyPosition: "4.2%",
     recommendedPosition: "2.1%",
   },
+  thesis: "Bitcoin is breaking above key resistance with strong momentum. RSI showing bullish divergence, MACD crossover confirmed. On-chain metrics indicate accumulation by whales. ETF inflows remain positive and technical setup suggests a move to $102k if $98k resistance clears.",
 };
 
 export function AnalysisDetail({ symbol, onClose }: AnalysisDetailProps) {
