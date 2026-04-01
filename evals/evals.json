@@ -1,0 +1,45 @@
+{
+  "skill_name": "trading",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/trading Bitcoin",
+      "expected_output": "Comprehensive Bitcoin analysis including current price, technical indicators, PESTLE+ factors, sentiment analysis, and explicit trading signal with entry/exit levels and position sizing"
+    },
+    {
+      "id": 2,
+      "prompt": "Should I buy Apple stock right now? What's your analysis on AAPL?",
+      "expected_output": "Apple Inc. fundamental analysis with P/E, revenue growth, technical levels, and clear trading recommendation with stop loss and take profit targets"
+    },
+    {
+      "id": 3,
+      "prompt": "Analyze EUR/USD for a swing trade",
+      "expected_output": "Forex pair analysis with interest rate differential, technical levels, and swing trade setup with specific entry/exit points"
+    },
+    {
+      "id": 4,
+      "prompt": "What's your view on gold? XAU/USD",
+      "expected_output": "Gold/commodity analysis with real yields, dollar strength, geopolitical factors, and trading signal"
+    },
+    {
+      "id": 5,
+      "prompt": "Tesla earnings are coming up - should I hold or sell my TSLA position?",
+      "expected_output": "TSLA-specific analysis with earnings considerations, technical levels for decision points, and risk management guidance"
+    },
+    {
+      "id": 6,
+      "prompt": "/trading ETH",
+      "expected_output": "Ethereum analysis with DeFi ecosystem metrics, layer 2 activity, technical setup, and trading signal"
+    },
+    {
+      "id": 7,
+      "prompt": "I'm thinking of going long on crude oil. What do you think?",
+      "expected_output": "Oil market analysis with supply/demand balance, inventory data, OPEC+ factors, and risk assessment for long position"
+    },
+    {
+      "id": 8,
+      "prompt": "What's the best position size for a $50k portfolio trading Bitcoin?",
+      "expected_output": "Position sizing calculation using Kelly Criterion and fixed fractional methods, with specific share/coin amount and risk parameters"
+    }
+  ]
+}
