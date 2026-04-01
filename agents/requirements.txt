@@ -1,0 +1,30 @@
+# Financial Intelligence Trading Agents
+# Python dependencies for trading agents
+
+# Core
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+
+# Async HTTP
+aiohttp>=3.9.0
+websockets>=12.0
+
+# Technical Analysis
+ta-lib>=0.4.28
+pandas-ta>=0.3.14b
+
+# Data
+python-dateutil>=2.8.2
+pytz>=2023.3
+
+# Logging
+python-json-logger>=2.0.7
+
+# Broker Integration
+# alpaca-py>=0.18.0  # Uncomment for live Alpaca trading
+# binance-connector>=3.7.0  # Uncomment for live Binance trading
+
+# Optional: For advanced features
+# yfinance>=0.2.28  # Yahoo Finance data
+# requests>=2.31.0  # HTTP requests

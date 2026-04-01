@@ -1,34 +1,120 @@
-# Trading Skill for Claude Code
+# Financial Intelligence Trading Agent
 
-A comprehensive Financial Intelligence Trading Agent for Claude Code that provides professional-grade market analysis and explicit trading signals.
+**The most comprehensive AI-powered trading analysis system on Claude Code.**
+
+Professional-grade multi-agent trading system that orchestrates 10 specialized AI agents to deliver explicit trading signals with technical, fundamental, sentiment, and macro analysis.
+
+![Trading Dashboard](https://img.shields.io/badge/Status-Production_Ready-green)
+![Assets](https://img.shields.io/badge/assets-crypto%2C%20stocks%2C%20forex%2C%20commodities-blue)
+![License](https://img.shields.io/badge/license-MIT-yellow)
 
 ## Features
 
-- **Multi-Asset Support**: Cryptocurrencies, Stocks, Forex, Commodities
-- **Comprehensive Analysis**: Technical, Fundamental, PESTLE+ macro factors
-- **Explicit Trading Signals**: Clear direction, entry zones, stops, and targets
-- **Position Sizing**: Kelly Criterion and risk-based position calculations
-- **Risk Management**: Stop loss strategies, take profit levels, correlation checks
+### Multi-Agent Architecture
 
-## Installation
+10 specialized Python agents orchestrated by a master agent:
 
-### Option 1: Clone to Skills Directory
+| Agent | Purpose |
+|-------|---------|
+| **Market Data** | Real-time prices, volume, support/resistance |
+| **Technical Analysis** | RSI, MACD, Bollinger Bands, chart patterns |
+| **Fundamental Analysis** | P/E, TVL, on-chain metrics, yield differentials |
+| **Sentiment Analysis** | News sentiment, social media, fear/greed |
+| **PESTLE Analysis** | Political, Economic, Social, Tech, Legal, Environmental |
+| **News Monitor** | Catalysts, earnings, regulatory events |
+| **Risk Management** | Kelly Criterion, VaR, CVaR, position sizing |
+| **Signal Generator** | Multi-factor signal synthesis |
+| **Portfolio Manager** | Correlation matrix, optimization |
+| **Backtesting** | Walk-forward analysis, strategy grading |
+| **Broker Execution** | Alpaca/Binance integration for live trading |
+| **WebSocket Feed** | Real-time price streaming |
+
+### Vercel Dashboard
+
+Modern Next.js dashboard with:
+
+- **Live Trading Signals** - Real-time signals from all agents
+- **Detailed Analysis Modal** - Full breakdown of technicals, fundamentals, sentiment
+- **Portfolio Overview** - P&L tracking, risk exposure, position summary
+- **Live Price Feeds** - WebSocket/SSE streaming prices
+- **Activity Feed** - New signals, alerts, updates
+- **Automated Cron Updates** - 15-minute auto-refresh via Vercel Cron
+
+### Asset Class Support
+
+| Asset Class | Examples | Data Sources |
+|-------------|----------|--------------|
+| **Crypto** | BTC, ETH, SOL | CoinGecko, Binance |
+| **Stocks** | AAPL, TSLA, NVDA | Yahoo Finance, Alpaca |
+| **Forex** | EUR/USD, GBP/JPY | Central bank rates |
+| **Commodities** | XAU/USD, Oil | COMEX, NYMEX |
+
+## Quick Start
+
+### Install Python Dependencies
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/trading-skill.git
+cd agents
+pip install -r requirements.txt
+```
+
+### Run the Trading Agent
+
+```bash
+# JSON output for dashboard/API
+python financial_intelligence_trading_agent.py --symbol BTC --asset-class crypto --json
+
+# Human-readable output
+python financial_intelligence_trading_agent.py --symbol AAPL --asset-class stock
+
+# WebSocket price feed
+python websocket_price_feed.py --symbols BTC,ETH --feed binance
+
+# Broker execution (paper trading)
+python broker_execution_agent.py --broker alpaca --paper --symbol AAPL --side buy --qty 10
+```
+
+### Run the Dashboard
+
+```bash
+cd dashboard
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+## Deploy on Vercel
+
+```bash
+npm install -g vercel
+cd dashboard
+vercel deploy
+```
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `PYTHON_ENABLED` | Set to `1` to enable Python runtime |
+| `CRON_SECRET` | Secret token for cron authentication |
+| `ALPACA_API_KEY` | Alpaca API key (for broker integration) |
+| `ALPACA_API_SECRET` | Alpaca API secret |
+| `BINANCE_API_KEY` | Binance API key |
+| `BINANCE_API_SECRET` | Binance API secret |
+
+## Usage with Claude Code
+
+Install as a Claude Code skill:
+
+```bash
+# Clone to skills directory
+git clone https://github.com/moneymotive029-source/trading-skill.git
 cd trading-skill
 cp -r . ~/.claude/skills/trading
 ```
 
-### Option 2: Manual Install
-
-1. Download this repository
-2. Copy the `trading` folder to `~/.claude/skills/`
-3. Restart Claude Code
-
-## Usage
-
-Once installed, the skill activates automatically when you ask about trading or mention assets:
+Then use in Claude Code:
 
 ```bash
 /trading Bitcoin
@@ -36,31 +122,13 @@ Once installed, the skill activates automatically when you ask about trading or 
 /trading Apple stock
 /trading AAPL
 /trading EUR/USD
-/trading Gold
-/trading XAU/USD
+Should I buy Tesla?
+Analyze gold for a swing trade
 ```
 
-You can also use natural language:
-- "Should I buy Tesla?"
-- "Analyze Bitcoin for a swing trade"
-- "What's your view on gold?"
-- "Best position size for a $50k portfolio trading ETH?"
+## Trading Signal Output
 
-## Output Structure
-
-Every analysis includes:
-
-1. **Executive Summary** - Quick take on the asset
-2. **Current Market Data** - Price, changes, key levels
-3. **Technical Analysis** - Trend, momentum, volatility indicators
-4. **Fundamental Analysis** - Asset-specific metrics (P/E for stocks, TVL for crypto, etc.)
-5. **PESTLE+ Factors** - Political, Economic, Social, Technological, Legal, Environmental, Sentiment
-6. **Sentiment Analysis** - Quantitative and qualitative sentiment data
-7. **Trading Signal** - Explicit LONG/SHORT/NEUTRAL with entry, stop, targets
-8. **Risk Management** - Position sizing, key risks, invalidation conditions
-9. **Sources** - All data sources used
-
-## Example Output
+Every signal includes:
 
 ```markdown
 ## Trading Signal: Bitcoin (BTC/USD)
@@ -68,99 +136,139 @@ Every analysis includes:
 | Parameter | Value |
 |-----------|-------|
 | **Direction** | LONG |
-| **Confidence** | Medium |
+| **Confidence** | High |
 | **Timeframe** | Swing (3-7 days) |
-| **Entry Zone** | $67,000 - $68,500 |
-| **Stop Loss** | $64,200 (-5.2%) |
-| **Take Profit 1** | $72,000 (+6.5%) |
-| **Take Profit 2** | $75,500 (+11.2%) |
-| **Risk/Reward** | 1:2.3 |
+| **Entry Zone** | $94,200 - $95,500 |
+| **Stop Loss** | $91,800 (-2.8%) |
+| **Take Profit 1** | $98,000 (+4.0%) |
+| **Take Profit 2** | $102,000 (+8.5%) |
+| **Risk/Reward** | 1:3.2 |
 
 ### Position Sizing
-
-**Recommended Position:** 2.5% of portfolio
-**Kelly Criterion:** 3.1% (using 55% win rate, 2.3:1 R/R)
+- **Kelly Criterion:** 4.2%
+- **Recommended:** 2.1% (Half-Kelly for safety)
 
 ### Trade Thesis
-
-Bitcoin is breaking above the 50-day MA with improving on-chain metrics. 
-ETF inflows remain positive and the technical setup suggests a move to 
-$72k+ if $69k resistance clears.
+Bitcoin breaking above key resistance with strong momentum...
 
 ### Key Risks
-
-1. Mt. Gox repayment overhang
-2. Strong USD headwind
-3. Weekend liquidity gaps
+1. Regulatory headwinds
+2. Exchange concentration risk
+3. Liquidity gaps
 
 ### Invalidation
-
-This thesis is invalidated if:
-- Price closes below $64,200 on daily timeframe
-- ETF flows turn negative for 3+ consecutive days
+- Daily close below $91,800
 ```
 
-## Reference Documentation
-
-The skill includes bundled reference files:
-
-- `references/pestle-framework.md` - Complete PESTLE+ analysis methodology
-- `references/position-sizing.md` - Position sizing methods and risk management
-
-## Test Cases
-
-Run these to validate the skill is working:
-
-```bash
-# In Claude Code with the skill installed
-/trading Bitcoin
-/trading AAPL
-Analyze EUR/USD for a swing trade
-What's your view on gold?
-```
-
-## Disclaimer
-
-**This skill provides analysis and educational content only. It does not constitute financial advice.**
-
-Trading involves substantial risk of loss. Past performance does not guarantee future results. Always:
-- Do your own research
-- Consult with a licensed financial advisor
-- Never risk more than you can afford to lose
-- Use proper position sizing and risk management
-
-## Development
-
-### Directory Structure
+## Project Structure
 
 ```
 trading-skill/
-├── SKILL.md              # Main skill definition
-├── README.md             # This file
+├── agents/
+│   ├── financial_intelligence_trading_agent.py  # Master orchestrator
+│   ├── market_data_agent.py
+│   ├── technical_analysis_agent.py
+│   ├── fundamental_analysis_agent.py
+│   ├── sentiment_analysis_agent.py
+│   ├── pestle_analysis_agent.py
+│   ├── news_monitor_agent.py
+│   ├── risk_management_agent.py
+│   ├── signal_generator_agent.py
+│   ├── portfolio_manager_agent.py
+│   ├── backtesting_agent.py
+│   ├── broker_execution_agent.py        # Live trading
+│   ├── websocket_price_feed.py          # Real-time streaming
+│   └── requirements.txt
+├── dashboard/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── api/
+│   │   │   │   ├── signals/route.ts
+│   │   │   │   ├── analyze/route.ts
+│   │   │   │   ├── ws/prices/route.ts
+│   │   │   │   └── cron/signals/route.ts
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   └── components/
+│   │       ├── signal-table.tsx
+│   │       ├── analysis-detail.tsx
+│   │       ├── live-prices.tsx
+│   │       └── ...
+│   ├── package.json
+│   ├── vercel.json
+│   └── README.md
 ├── evals/
-│   └── evals.json        # Test prompts for evaluation
-└── references/
-    ├── pestle-framework.md    # PESTLE+ analysis guide
-    └── position-sizing.md     # Risk management guide
+│   └── evals.json
+├── references/
+│   ├── pestle-framework.md
+│   └── position-sizing.md
+├── CLAUDE.md
+├── SKILL.md
+├── LICENSE
+└── README.md
 ```
 
-### Improving the Skill
+## API Endpoints
 
-To test and improve the skill:
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/signals` | GET | Get all trading signals |
+| `/api/signals` | POST | Get signal for specific symbol |
+| `/api/analyze` | POST | Run full multi-agent analysis |
+| `/api/ws/prices` | GET | WebSocket/SSE price stream |
+| `/api/cron/signals` | GET | Scheduled signal refresh (Cron) |
 
-1. Run test prompts from `evals/evals.json`
-2. Compare outputs against expected results
-3. Update `SKILL.md` based on findings
-4. Add new test cases for edge cases discovered
+## Broker Integration
+
+### Supported Brokers
+
+- **Alpaca** - Stocks/ETFs (paper + live trading)
+- **Binance** - Crypto (testnet + live)
+- **Interactive Brokers** - Coming soon
+
+### Example: Submit Order
+
+```bash
+# Alpaca paper trading
+python broker_execution_agent.py \
+  --broker alpaca \
+  --paper \
+  --api-key $ALPACA_KEY \
+  --api-secret $ALPACA_SECRET \
+  --symbol AAPL \
+  --side buy \
+  --qty 10 \
+  --type market
+```
+
+## Risk Disclaimer
+
+**This software is for educational and informational purposes only.**
+
+- Trading involves substantial risk of loss
+- Past performance does not guarantee future results
+- Never risk more than you can afford to lose
+- Consult with a licensed financial advisor before trading
+- The authors are not responsible for any trading losses
 
 ## License
 
-MIT License - Feel free to use, modify, and distribute.
+MIT License - See [LICENSE](LICENSE) for details.
 
 ## Contributing
 
 Contributions welcome! Areas for improvement:
-- Additional asset class support (bonds, options, futures)
-- Backtesting integration
-- Portfolio correlation analysis
-- Real-time alert system
+
+- Additional broker integrations (IBKR, TD Ameritrade)
+- Options/futures support
+- Advanced backtesting features
+- Machine learning signal enhancement
+- Mobile app integration
+
+## Acknowledgments
+
+Built with:
+- [Next.js](https://nextjs.org/)
+- [Vercel Functions](https://vercel.com/docs/functions)
+- [Python](https://python.org/)
+- [Claude Code](https://claude.ai/code)
