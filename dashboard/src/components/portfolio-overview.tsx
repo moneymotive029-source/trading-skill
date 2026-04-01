@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
-import { DollarSign, Briefcase, TrendingUp, Gauge } from "lucide-react";
+import { DollarSign, Briefcase, TrendingUp, Gauge, ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 const portfolioData = [
   {
@@ -39,76 +39,49 @@ const portfolioData = [
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: "easeOut",
-    },
-  },
-};
-
 export function PortfolioOverview() {
   return (
-    <motion.div
-      className="grid grid-cols-1 md:grid-cols-4 gap-4"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {portfolioData.map((item, index) => (
         <motion.div
           key={item.label}
-          variants={itemVariants}
-          whileHover={{ scale: 1.03, y: -4 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1, duration: 0.4 }}
+          whileHover={{ scale: 1.02, y: -4 }}
         >
-          <Card className="relative overflow-hidden bg-slate-900/50 border-slate-800 backdrop-blur-xl group hover:border-slate-600 transition-colors">
-            {/* Gradient glow effect */}
-            <div className={`absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br ${item.gradient} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity`} />
+          <Card className="bg-[#0f0f15]/60 border-white/5 backdrop-blur-xl hover:border-white/10 transition-all group relative overflow-hidden">
+            {/* Animated gradient glow */}
+            <div className={`absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br ${item.gradient} opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500`} />
 
-            <CardContent className="p-4 relative z-10">
+            <CardContent className="p-5 relative z-10">
               <div className="flex items-center justify-between">
-                <div className="text-slate-400 text-sm">{item.label}</div>
-                <div className={`p-2 bg-gradient-to-br ${item.gradient} rounded-lg text-white shadow-lg`}>
+                <div>
+                  <div className="text-slate-400 text-sm">{item.label}</div>
+                  <div className="text-3xl font-bold mt-1 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                    {item.value}
+                  </div>
+                </div>
+                <div className={`p-3 bg-gradient-to-br ${item.gradient} rounded-xl text-white shadow-lg`}>
                   {item.icon}
                 </div>
               </div>
 
-              <div className="text-2xl font-bold text-white mt-3">{item.value}</div>
-
-              <div className={`text-xs mt-2 flex items-center gap-1 ${
-                item.changeUp === true ? 'text-green-400' :
-                item.changeUp === false ? 'text-red-400' :
-                'text-slate-500'
-              }`}>
-                {item.changeUp === true && (
-                  <motion.span
-                    animate={{ y: [0, -2, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    ↑
-                  </motion.span>
-                )}
-                {item.change}
-              </div>
+              {item.change && (
+                <div className={`flex items-center gap-1.5 mt-3 text-sm ${
+                  item.changeUp === true ? 'text-green-400' :
+                  item.changeUp === false ? 'text-red-400' :
+                  'text-slate-500'
+                }`}>
+                  {item.changeUp === true && <ArrowUpRight className="w-4 h-4" />}
+                  {item.changeUp === false && <ArrowDownRight className="w-4 h-4" />}
+                  <span className="font-medium">{item.change}</span>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
       ))}
-    </motion.div>
+    </div>
   );
 }

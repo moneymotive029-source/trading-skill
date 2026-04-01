@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
@@ -16,18 +16,13 @@ const symbols = ["BTC", "ETH", "AAPL", "TSLA", "EURUSD", "XAUUSD"];
 export function LivePrices() {
   const [prices, setPrices] = useState<Record<string, PriceUpdate>>({});
   const [connected, setConnected] = useState(false);
-  const [prevPrices, setPrevPrices] = useState<Record<string, string>>({});
-  const eventSourceRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
     const url = `/api/ws/prices?symbols=${symbols.join(",")}`;
 
     const eventSource = new EventSource(url);
-    eventSourceRef.current = eventSource;
 
-    eventSource.onopen = () => {
-      setConnected(true);
-    };
+    eventSource.onopen = () => setConnected(true);
 
     eventSource.onmessage = (event) => {
       try {
@@ -49,45 +44,34 @@ export function LivePrices() {
       eventSource.close();
     };
 
-    return () => {
-      eventSource.close();
-    };
+    return () => eventSource.close();
   }, []);
-
-  // Track price changes for animation
-  useEffect(() => {
-    Object.entries(prices).forEach(([symbol, data]) => {
-      if (prevPrices[symbol] && prevPrices[symbol] !== data.price) {
-        // Price changed - could trigger animation
-      }
-      setPrevPrices((prev) => ({ ...prev, [symbol]: data.price }));
-    });
-  }, [prices]);
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="flex items-center gap-4 bg-slate-900/50 backdrop-blur-xl px-4 py-2 rounded-xl border border-slate-800"
+      className="flex items-center gap-3 bg-[#0f0f15]/80 backdrop-blur-xl px-4 py-2 rounded-xl border border-white/5"
     >
+      {/* Connection indicator */}
       <motion.div
         className="flex items-center gap-2"
         animate={{ opacity: connected ? 1 : 0.5 }}
       >
-        <div
-          className={`w-2 h-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`}
-        >
+        <div className="relative">
+          <div className={`w-2 h-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
           {connected && (
             <motion.div
-              className="w-full h-full rounded-full bg-green-500"
-              animate={{ scale: [1, 1.3, 1] }}
+              className="absolute inset-0 w-2 h-2 rounded-full bg-green-500"
+              animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 0] }}
               transition={{ repeat: Infinity, duration: 2 }}
             />
           )}
         </div>
       </motion.div>
 
-      <div className="flex gap-3 overflow-hidden">
+      {/* Price tickers */}
+      <div className="flex gap-2 overflow-hidden">
         <AnimatePresence>
           {Object.entries(prices).map(([symbol, data], index) => {
             const change = parseFloat(data.change);
@@ -96,26 +80,25 @@ export function LivePrices() {
             return (
               <motion.div
                 key={symbol}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
+                initial={{ opacity: 0, x: -10, scale: 0.9 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 10, scale: 0.9 }}
                 transition={{ delay: index * 0.05 }}
-                className="flex items-center gap-1.5 px-2 py-1 bg-slate-800/50 rounded-lg"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 rounded-lg border border-white/5 hover:border-white/10 transition-colors"
               >
-                <span className="text-xs font-medium text-slate-300">{symbol}</span>
+                <span className="text-xs font-semibold text-slate-300">{symbol}</span>
                 <motion.span
                   key={data.price}
-                  initial={{ scale: 1.1, color: isUp ? "#4ade80" : "#f87171" }}
-                  animate={{ scale: 1, color: "#e2e8f0" }}
-                  transition={{ duration: 0.3 }}
-                  className="text-xs text-slate-200"
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  className="text-xs text-white font-mono"
                 >
                   ${data.price}
                 </motion.span>
                 <motion.span
-                  className={`text-xs ${isUp ? 'text-green-400' : 'text-red-400'}`}
+                  className={`text-xs font-medium ${isUp ? 'text-green-400' : 'text-red-400'}`}
                   animate={isUp ? { y: [0, -1, 0] } : {}}
-                  transition={{ repeat: Infinity, duration: 1 }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
                 >
                   {isUp ? '+' : ''}{data.change}%
                 </motion.span>
