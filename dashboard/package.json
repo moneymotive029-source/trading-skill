@@ -24,9 +24,13 @@
   },
   "devDependencies": {
     "@21st-dev/magic": "^0.1.0",
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^22.13.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.7.0"
   }
 }
