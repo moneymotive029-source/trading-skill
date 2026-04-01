@@ -18,6 +18,8 @@ This is the main entry point that orchestrates all 10 specialized sub-agents:
 import asyncio
 import pandas as pd
 import numpy as np
+import json
+import sys
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
@@ -664,24 +666,82 @@ class FinancialIntelligenceTradingAgent:
 async def main():
     """
     Example usage of Financial Intelligence Trading Agent
+
+    CLI Usage:
+        python financial_intelligence_trading_agent.py --symbol BTC --asset-class crypto --json
+        python financial_intelligence_trading_agent.py --symbol AAPL --asset-class stock
     """
-    print("=" * 60)
-    print("FINANCIAL INTELLIGENCE TRADING AGENT")
-    print("=" * 60)
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Financial Intelligence Trading Agent')
+    parser.add_argument('--symbol', type=str, required=True, help='Asset symbol (e.g., BTC, AAPL)')
+    parser.add_argument('--asset-class', type=str, default='crypto',
+                       choices=['crypto', 'stock', 'forex', 'commodity'],
+                       help='Asset class')
+    parser.add_argument('--json', action='store_true', help='Output as JSON')
+    parser.add_argument('--account-size', type=float, default=100000, help='Account size')
+    parser.add_argument('--risk-per-trade', type=float, default=1.0, help='Risk per trade (%)')
+
+    args = parser.parse_args()
 
     async with FinancialIntelligenceTradingAgent(
-        account_size=100000,
-        risk_per_trade=1.0
+        account_size=args.account_size,
+        risk_per_trade=args.risk_per_trade
     ) as agent:
-        # Analyze Bitcoin
-        print("\n📊 Analyzing Bitcoin (BTC)...")
-        btc_result = await agent.analyze('BTC', 'crypto')
-        print(agent.format_output(btc_result))
+        print(f"\nAnalyzing {args.symbol} ({args.asset_class})...", file=sys.stderr)
+        result = await agent.analyze(args.symbol, args.asset_class)
 
-        # Analyze a stock
-        print("\n📊 Analyzing Apple (AAPL)...")
-        aapl_result = await agent.analyze('AAPL', 'stock')
-        print(agent.format_output(aapl_result))
+        if args.json:
+            # Output JSON for dashboard integration
+            recommendation = result.recommendation
+            output = {
+                "symbol": args.symbol,
+                "asset_class": args.asset_class,
+                "timestamp": datetime.now().isoformat(),
+                "signal": {
+                    "direction": recommendation.direction,
+                    "confidence": recommendation.confidence_level,
+                    "entry_zone": recommendation.entry_price_zone,
+                    "stop_loss": recommendation.stop_loss,
+                    "take_profit_1": recommendation.take_profit_1,
+                    "take_profit_2": recommendation.take_profit_2,
+                    "risk_reward": recommendation.risk_reward_ratio,
+                    "thesis": recommendation.trade_thesis,
+                },
+                "technicals": {
+                    "rsi": result.technical_analysis.indicators.rsi if result.technical_analysis else None,
+                    "macd": {
+                        "histogram": result.technical_analysis.indicators.macd_histogram if result.technical_analysis else None,
+                        "signal": "Bullish" if result.technical_analysis and result.technical_analysis.indicators.macd_signal == "bullish" else "Bearish" if result.technical_analysis else None,
+                    },
+                    "moving_averages": {
+                        "sma_20": result.technical_analysis.key_levels.sma_20 if result.technical_analysis else None,
+                        "sma_50": result.technical_analysis.key_levels.sma_50 if result.technical_analysis else None,
+                        "sma_200": result.technical_analysis.key_levels.sma_200 if result.technical_analysis else None,
+                    },
+                    "bollinger_bands": {
+                        "upper": result.technical_analysis.key_levels.bollinger_upper if result.technical_analysis else None,
+                        "middle": result.technical_analysis.key_levels.bollinger_middle if result.technical_analysis else None,
+                        "lower": result.technical_analysis.key_levels.bollinger_lower if result.technical_analysis else None,
+                    },
+                },
+                "fundamentals": result.fundamental_analysis.metrics if result.fundamental_analysis else {},
+                "sentiment": {
+                    "score": result.sentiment_analysis.indicators.overall_sentiment_score if result.sentiment_analysis else None,
+                    "fear_greed": result.sentiment_analysis.indicators.fear_greed_index if result.sentiment_analysis else None,
+                    "classification": result.sentiment_analysis.indicators.fear_greed_classification if result.sentiment_analysis else None,
+                },
+                "pestle": result.pestle_analysis.factors if result.pestle_analysis else {},
+                "risk_metrics": {
+                    "var_95": result.risk_analysis.portfolio_metrics.var_95 if result.risk_analysis else None,
+                    "cvar_95": result.risk_analysis.portfolio_metrics.cvar_95 if result.risk_analysis else None,
+                    "kelly_position": f"{recommendation.kelly_criterion * 100:.1f}%" if recommendation.kelly_criterion else None,
+                    "recommended_position": f"{recommendation.recommended_position_size * 100:.1f}%" if recommendation.recommended_position_size else None,
+                },
+            }
+            print(json.dumps(output, indent=2))
+        else:
+            print(agent.format_output(result))
 
 
 if __name__ == '__main__':
