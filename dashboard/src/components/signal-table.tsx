@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { SignalBadge, ConfidenceBadge } from "./signal-badge";
 import { AnalysisDetail } from "./analysis-detail";
 
@@ -66,7 +67,52 @@ const mockSignals: Signal[] = [
     riskReward: "-",
     timestamp: "32 min ago",
   },
+  {
+    id: "5",
+    symbol: "ETH/USD",
+    assetClass: "Crypto",
+    direction: "LONG",
+    confidence: "Medium",
+    entryZone: "$3,180 - $3,220",
+    stopLoss: "$3,050",
+    takeProfit: "$3,500",
+    riskReward: "1:2.5",
+    timestamp: "45 min ago",
+  },
+  {
+    id: "6",
+    symbol: "TSLA",
+    assetClass: "Stock",
+    direction: "SHORT",
+    confidence: "High",
+    entryZone: "$248 - $252",
+    stopLoss: "$260",
+    takeProfit: "$225",
+    riskReward: "1:2.0",
+    timestamp: "1h ago",
+  },
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
+
+const rowVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.3,
+    },
+  },
+};
 
 export function SignalTable({ selectedAsset }: { selectedAsset: string | null }) {
   const [analyzingSymbol, setAnalyzingSymbol] = useState<string | null>(null);
@@ -77,7 +123,7 @@ export function SignalTable({ selectedAsset }: { selectedAsset: string | null })
         <table className="w-full">
           <thead>
             <tr className="border-b border-slate-800">
-              <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider pb-3">
+              <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider pb-3 pl-4">
                 Asset
               </th>
               <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider pb-3">
@@ -101,15 +147,28 @@ export function SignalTable({ selectedAsset }: { selectedAsset: string | null })
               <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider pb-3">
                 Age
               </th>
-              <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider pb-3">
+              <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider pb-3 pr-4">
                 Action
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800">
-            {mockSignals.map((signal) => (
-              <tr key={signal.id} className="hover:bg-slate-800/30 transition-colors">
-                <td className="py-3">
+          <motion.tbody
+            className="divide-y divide-slate-800"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {mockSignals.map((signal, index) => (
+              <motion.tr
+                key={signal.id}
+                variants={rowVariants}
+                whileHover={{
+                  backgroundColor: "rgba(59, 130, 246, 0.05)",
+                  scale: 1.005,
+                }}
+                className="cursor-pointer transition-colors"
+              >
+                <td className="py-3 pl-4">
                   <div className="flex flex-col">
                     <span className="font-medium text-white">{signal.symbol}</span>
                     <span className="text-xs text-slate-500">{signal.assetClass}</span>
@@ -126,17 +185,19 @@ export function SignalTable({ selectedAsset }: { selectedAsset: string | null })
                 <td className="py-3 text-green-400 text-sm">{signal.takeProfit}</td>
                 <td className="py-3 text-slate-300 text-sm">{signal.riskReward}</td>
                 <td className="py-3 text-slate-500 text-sm">{signal.timestamp}</td>
-                <td className="py-3">
-                  <button
-                    className="px-3 py-1 text-xs bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 transition-colors"
+                <td className="py-3 pr-4">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-3 py-1.5 text-xs bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg shadow-blue-500/20"
                     onClick={() => setAnalyzingSymbol(signal.symbol.split("/")[0])}
                   >
                     Analyze
-                  </button>
+                  </motion.button>
                 </td>
-              </tr>
+              </motion.tr>
             ))}
-          </tbody>
+          </motion.tbody>
         </table>
       </div>
 

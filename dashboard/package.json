@@ -9,15 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@motionone/dom": "^10.18.0",
+    "@vercel/functions": "^1.5.0",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^0.475.0",
     "next": "15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@vercel/functions": "^1.5.0",
-    "recharts": "^2.15.0",
-    "lucide-react": "^0.475.0",
-    "date-fns": "^4.1.0"
+    "recharts": "^2.15.0"
   },
   "devDependencies": {
+    "@21st-dev/magic": "^0.1.0",
     "@types/node": "^22.13.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
