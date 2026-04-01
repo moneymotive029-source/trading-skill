@@ -7,6 +7,7 @@ import { AssetSearch } from "@/components/asset-search";
 import { SignalTable } from "@/components/signal-table";
 import { PortfolioOverview } from "@/components/portfolio-overview";
 import { ActivityFeed } from "@/components/activity-feed";
+import { LivePrices } from "@/components/live-prices";
 
 export default function Dashboard() {
   const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
@@ -22,7 +23,10 @@ export default function Dashboard() {
               AI-powered trading signals from multi-agent analysis
             </p>
           </div>
-          <AssetSearch onSelect={setSelectedAsset} />
+          <div className="flex items-center gap-6">
+            <LivePrices />
+            <AssetSearch onSelect={setSelectedAsset} />
+          </div>
         </div>
 
         {/* Portfolio Overview */}
